@@ -1,0 +1,7 @@
+.gradle
+.idea
+*.iml
+target/
+.DS_Store
+gradle.properties
+twitter4j.properties
