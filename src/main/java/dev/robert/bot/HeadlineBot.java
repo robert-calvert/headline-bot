@@ -26,7 +26,7 @@ public class HeadlineBot {
 
     private static Twitter twitter;
 
-    // 50% chance that one of these prefixes is added to the front of a tweet.
+    // 25% chance that one of these prefixes is added to the front of a tweet.
     private static String[] prefixes = new String[] {
             "#LATEST", "#BREAKING", "TRUMP LATEST:", "JUST IN:", "Sources reveal:", "#NEWS", "Great news!", "#Trump"
     };
@@ -48,11 +48,14 @@ public class HeadlineBot {
         System.out.println("[Tweet] " + status);
     }
 
-    // 50% of the time, a random prefix is added.
+    // 25% of the time, a random prefix is added, and 25% of the time a trending hashtag is added.
     private static String getPrefix() {
         double d = ThreadLocalRandom.current().nextDouble();
-        if (d > 0.5) {
+        if (d < 0.25) {
             return prefixes[ThreadLocalRandom.current().nextInt(prefixes.length)] + " ";
+        } else if (d > 0.25 && d < 0.5) {
+            List<String> trends = getTrends();
+            return trends.get(ThreadLocalRandom.current().nextInt(trends.size())) + " ";
         } else {
             return "";
         }
@@ -79,6 +82,24 @@ public class HeadlineBot {
 
         for (Status status : statuses) {
             list.add(status.getText());
+        }
+
+        return list;
+    }
+
+    // Returns currently trending hashtags (for the United States)
+    private static List<String> getTrends() {
+        List<String> list = new ArrayList<>();
+
+        try {
+            Trends trends = twitter.getPlaceTrends(23424977);
+            for (Trend trend : trends.getTrends()) {
+                if (trend.getName().startsWith("#")) {
+                    list.add(trend.getName());
+                }
+            }
+        } catch (TwitterException e) {
+            e.printStackTrace();
         }
 
         return list;
