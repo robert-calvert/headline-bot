@@ -35,7 +35,6 @@ public class WordsManager {
     }
 
     // Builds a status of the given word length.
-    // TODO : Handle the possibility of the tweet exceeding 140 chars with the given length.
     public String getStatus(int length) {
         StringBuilder builder = new StringBuilder();
         Word current = pickStarter();
@@ -44,11 +43,15 @@ public class WordsManager {
             if (current == null)
                 continue;
 
+            // If the next word will make the tweet exceed 140 characters, return.
+            if ((builder.length() + current.getWord().length()) > 140)
+                return filter(builder.toString());
+
             builder.append(current.getWord()).append(" ");
             current = current.getMostLikely();
         }
 
-        return builder.toString();
+        return filter(builder.toString());
     }
 
     // Filter the starter words, and pick one at random.
@@ -79,5 +82,10 @@ public class WordsManager {
         Word newWord = new Word(word);
         words.add(newWord);
         return newWord;
+    }
+
+    // Removes some punctuation.
+    private String filter(String status) {
+        return status.replace("'", "").replace("\"", "");
     }
 }

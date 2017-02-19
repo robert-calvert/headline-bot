@@ -14,7 +14,7 @@ public class HeadlineBot {
     Developed by Robert Calvert (@robxcalvert)
 
     A twitter bot designed to create incoherent but potentially funny headlines based on current events.
-    Using a crude implementation of the Markov chain, it gathers every word of 18 news sources' last 200 tweets,
+    Using a crude implementation of the Markov chain, it gathers every word of various news sources' last 500 tweets,
     as well as the word after it. It then uses these words to generate headlines by following each word with a
     word which followed it in a real tweet. This way the headlines may make *some* sense, but will still be random.
 
@@ -28,21 +28,21 @@ public class HeadlineBot {
 
     // 50% chance that one of these prefixes is added to the front of a tweet.
     private static String[] prefixes = new String[] {
-            "#LATEST", "#BREAKING", "TRUMP LATEST:", "JUST IN:", "Sources reveal:", "#NEWS"
+            "#LATEST", "#BREAKING", "TRUMP LATEST:", "JUST IN:", "Sources reveal:", "#NEWS", "Great news!", "#Trump"
     };
 
     // The 18 Twitter accounts that tweets are gathered from. May be subject to change.
     private static String[] accounts = new String[] {
-            "realDonaldTrump", "foxNews", "cnn", "NewshubNZ", "MSNBC", "NBCNews",
-            "BBCNews", "RT_com", "SkyNews", "nytimes", "HuffingtonPost", "guardian",
-            "washingtonpost", "CBSNews", "AP", "business", "Reuters", "AJEnglish"
+            "realDonaldTrump", "foxNews", "cnn", "NewshubNZ", "MSNBC", "NBCNews", "infowars", "YahooNews",
+            "BBCNews", "RT_com", "SkyNews", "nytimes", "HuffingtonPost", "guardian", "TheSun", "BBCWorld",
+            "washingtonpost", "CBSNews", "AP", "business", "Reuters", "AJEnglish", "Telegraph", "CNNPolitics"
     };
 
     public static void main(String[] args) throws Exception {
         twitter = TwitterFactory.getSingleton();
 
         WordsManager manager = new WordsManager(getAll());
-        String status = getPrefix() + manager.getStatus(15);
+        String status = getPrefix() + manager.getStatus(16);
         twitter.updateStatus(status);
 
         System.out.println("[Tweet] " + status);
@@ -75,7 +75,7 @@ public class HeadlineBot {
     // Loads the last 200 tweets from the specified account.
     private static List<String> getStatuses(String username) throws TwitterException {
         List<String> list = new ArrayList<>();
-        ResponseList<Status> statuses = twitter.getUserTimeline(username, new Paging(1, 200));
+        ResponseList<Status> statuses = twitter.getUserTimeline(username, new Paging(1, 500));
 
         for (Status status : statuses) {
             list.add(status.getText());
