@@ -19,7 +19,7 @@ public class HeadlineBot {
     word which followed it in a real tweet. This way the headlines may make *some* sense, but will still be random.
 
     I have attempted to use both left-wing, center and right-wing Twitters to get a nice sample of headlines.
-    I also add Donald Trump's tweets to the mix to add some comedic value.
+    I also add Donald Trump's and Alex Jones's tweets to the mix to add some comedic value.
 
     Developed using the Twitter4J API.
      */
@@ -33,29 +33,29 @@ public class HeadlineBot {
 
     // The 18 Twitter accounts that tweets are gathered from. May be subject to change.
     private static String[] accounts = new String[] {
-            "realDonaldTrump", "foxNews", "cnn", "NewshubNZ", "MSNBC", "NBCNews", "infowars", "YahooNews",
-            "BBCNews", "RT_com", "SkyNews", "nytimes", "HuffingtonPost", "guardian", "TheSun", "BBCWorld",
-            "washingtonpost", "CBSNews", "AP", "business", "Reuters", "AJEnglish", "Telegraph", "CNNPolitics"
+            "realDonaldTrump", "foxNews", "cnn", "NewshubNZ", "MSNBC", "NBCNews", "infowars", "YahooNews", "NewshubPolitics",
+            "BBCNews", "RT_com", "SkyNews", "nytimes", "HuffingtonPost", "guardian", "TheSun", "BBCWorld", "BreitbartNews",
+            "washingtonpost", "CBSNews", "AP", "business", "Reuters", "AJEnglish", "Telegraph", "CNNPolitics", "realAlexJones"
     };
 
     public static void main(String[] args) throws Exception {
         twitter = TwitterFactory.getSingleton();
 
         WordsManager manager = new WordsManager(getAll());
-        String status = getPrefix() + manager.getStatus(16);
+        String status = getPrefix() + manager.getStatus(18);
         twitter.updateStatus(status);
 
         System.out.println("[Tweet] " + status);
     }
 
-    // 25% of the time, a random prefix is added, and 25% of the time a trending hashtag is added.
+    // 25% of the time, a random prefix is added, and 50% of the time a trending hashtag is added.
     private static String getPrefix() {
         double d = ThreadLocalRandom.current().nextDouble();
-        if (d < 0.25) {
-            return prefixes[ThreadLocalRandom.current().nextInt(prefixes.length)] + " ";
-        } else if (d > 0.25 && d < 0.5) {
+        if (d < 0.5) {
             List<String> trends = getTrends();
             return trends.get(ThreadLocalRandom.current().nextInt(trends.size())) + " ";
+        } else if (d > 0.5 && d < 0.75) {
+            return prefixes[ThreadLocalRandom.current().nextInt(prefixes.length)] + " ";
         } else {
             return "";
         }
