@@ -19,7 +19,7 @@ public class HeadlineBot {
     word which followed it in a real tweet. This way the headlines may make *some* sense, but will still be random.
 
     I have attempted to use both left-wing, center and right-wing Twitters to get a nice sample of headlines.
-    I also add Donald Trump's and Alex Jones's tweets to the mix to add some comedic value.
+    I also add various non-news (or fake news) sources to diversify the word selection.
 
     Developed using the Twitter4J API.
      */
@@ -28,14 +28,15 @@ public class HeadlineBot {
 
     // 25% chance that one of these prefixes is added to the front of a tweet.
     private static String[] prefixes = new String[] {
-            "#LATEST", "#BREAKING", "TRUMP LATEST:", "JUST IN:", "Sources reveal:", "#NEWS", "Great news!", "#Trump"
+            "#trending", "#BREAKING", "TRUMP LATEST:", "JUST IN:", "Sources reveal:", "#NEWS", "Great news!", "#Trump"
     };
 
-    // The 18 Twitter accounts that tweets are gathered from. May be subject to change.
+    // Twitter accounts that tweets are gathered from. May be subject to change.
     private static String[] accounts = new String[] {
             "realDonaldTrump", "foxNews", "cnn", "NewshubNZ", "MSNBC", "NBCNews", "infowars", "YahooNews", "NewshubPolitics",
             "BBCNews", "RT_com", "SkyNews", "nytimes", "HuffingtonPost", "guardian", "TheSun", "BBCWorld", "BreitbartNews",
-            "washingtonpost", "CBSNews", "AP", "business", "Reuters", "AJEnglish", "Telegraph", "CNNPolitics", "realAlexJones"
+            "washingtonpost", "CBSNews", "AP", "business", "Reuters", "AJEnglish", "Telegraph", "CNNPolitics", "realAlexJones",
+            "PzFeed", "AV_Newswire", "TheOnion", "voxdotcom", "LANow", "USATODAY", "Salon", "nypost", "nzherald", "Slate"
     };
 
     public static void main(String[] args) throws Exception {
@@ -75,7 +76,7 @@ public class HeadlineBot {
         return statuses;
     }
 
-    // Loads the last 200 tweets from the specified account.
+    // Loads the last 500 tweets from the specified account.
     private static List<String> getStatuses(String username) throws TwitterException {
         List<String> list = new ArrayList<>();
         ResponseList<Status> statuses = twitter.getUserTimeline(username, new Paging(1, 500));
